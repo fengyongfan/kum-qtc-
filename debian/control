@@ -9,8 +9,6 @@ Build-Depends: debhelper,
             qtscript5-dev,
             qttools5-dev-tools,
             qtbase5-dev-tools,
-            qtmultimedia5-dev,
-			taglib,
 			libgsettings-qt-dev,
 			pkgconf
 Standards-Version: 4.4.1

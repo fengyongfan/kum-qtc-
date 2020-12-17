@@ -4,6 +4,6 @@
 #include <QMap>
 
 typedef QMap<QString, QString> CustomData;
-Q_DECLARE_METATYPE(CustomData)
+Q_DECLARE_METATYPE(CustomData);
 
 #endif // METATYPES_H

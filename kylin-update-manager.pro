@@ -86,4 +86,3 @@ RESOURCES += \
 DISTFILES += \
     kylin-update-manager.desktop \
     src/dbservice.py \
-    ../build-kylin-update-manager-unknown-u8c03u8bd5/dbservice.py

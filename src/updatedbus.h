@@ -32,6 +32,40 @@
 #include "appupdate.h"
 #include "metatypes.h"
 
+class AppMessage : public QObject
+{
+    Q_OBJECT
+public:
+     explicit AppMessage(QString appName);
+
+    QString name;
+    QString section;
+    QString origin;
+    QString installedSize;
+    QString maintainer;
+    QString source;
+    QString version;
+    QString packageSize;
+    QString shortDescription;
+    QString longDescription;
+
+    QString changedPackages;
+    QString packageCount;
+
+    QString changelogUrl;
+    QString screenshotUrl;
+    QString supportedUntil;
+
+    bool isInstalled;
+    bool upgradeable;
+
+private:
+    QApt::Backend *m_backend;
+    QApt::Package *m_package;
+    QApt::Group *m_group;
+    QApt::Transaction *m_trans;
+};
+
 class UpdateDbus : public QObject
 {
     Q_OBJECT

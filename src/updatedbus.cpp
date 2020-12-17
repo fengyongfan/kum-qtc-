@@ -745,7 +745,13 @@ void UpdateDbus::getSourceListFromSinfo()
 //    QByteArray t = file.readAll();
 //    ui->text_r->setText(QString(t));
 //    file.close();
-    QFile file("/home/liujialin/kylin/sinfo.206.juniper");
+    QString sInfoPath = QStandardPaths::writableLocation(QStandardPaths::HomeLocation) + "/kylin/sinfo.206.juniper";
+
+    qDebug() << "sInfoPath" << sInfoPath;
+
+    QFile file(sInfoPath);
+    if (!file.exists())
+        return ;
     file.open(QIODevice::ReadOnly | QIODevice::Text);
 
     QByteArray t ;
@@ -777,7 +783,7 @@ void UpdateDbus::getSourceListFromSinfo()
     }
 
     file.close();
-//    qDebug() << "sourcesList" << sourcesList;
+    qDebug() << "sourcesList" << sourcesList;
 
     return;
 
@@ -787,7 +793,12 @@ void UpdateDbus::getSourceListFromSinfo()
 void UpdateDbus::getInameAndCnameList()
 {
 
-    QFile file("/home/liujialin/kylin/sinfo.206.juniper");
+    QString sInfoPath = QStandardPaths::writableLocation(QStandardPaths::HomeLocation) + "/kylin/sinfo.206.juniper";
+    qDebug() << "sInfoPath" << sInfoPath;
+
+    QFile file(sInfoPath);
+    if (!file.exists())
+        return ;
     file.open(QIODevice::ReadOnly | QIODevice::Text);
 
     QByteArray t ;
@@ -832,7 +843,7 @@ void UpdateDbus::getInameAndCnameList()
             start = true;
         }
     }
-//    qDebug() << "inameList" << inameList;
+    qDebug() << "inameList" << inameList;
 
     start = false;
     while (!file.atEnd())
@@ -878,7 +889,7 @@ void UpdateDbus::getInameAndCnameList()
         }
 
     }
-//    qDebug() << "cnameList" << cnameList;
+    qDebug() << "cnameList" << cnameList;
 
     file.close();
 
@@ -913,3 +924,62 @@ void UpdateDbus::getAptSignal(QString arg, QVariantMap map)
     }
 }
 
+
+AppMessage::AppMessage(QString appName)
+{
+    m_backend = new QApt::Backend();
+    m_backend->init();
+
+    m_package = m_backend->package(appName);
+
+    if (!m_package == 0) {
+        this->name    = m_package->name();
+        this->section = m_package->section();
+        this->origin  = m_package->origin();
+        this->installedSize = m_package->availableInstalledSize();
+        this->maintainer = m_package->maintainer();
+        this->source  = m_package->sourcePackage();
+        this->version = m_package->version();
+        this->packageSize = m_package->downloadSize();
+        this->shortDescription = m_package->shortDescription();
+        this->longDescription  = m_package->longDescription();
+
+        this->changelogUrl   = m_package->changelogUrl().toString();
+        this->screenshotUrl  = m_package->screenshotUrl(QApt::Thumbnail).toString();
+        this->supportedUntil = m_package->supportedUntil().toString("yyyy-MM-dd HH:mm:ss");
+
+        qDebug() << "name" << name << "\n" <<
+                    "section" << section << "\n" <<
+                    "origin" << origin << "\n" <<
+                    "installedSize" << installedSize << "\n" <<
+                    "maintainer" << maintainer << "\n" <<
+                    "source" << source << "\n" <<
+                    "version" << version << "\n" <<
+                    "packageSize" << packageSize << "\n" <<
+                    "shortDescription" << shortDescription << "\n" <<
+                    "longDescription" << longDescription << "\n" <<
+                    "changelogUrl" << changelogUrl << "\n" <<
+                    "screenshotUrl" << screenshotUrl << "\n" <<
+                    "supportedUntil" << supportedUntil;
+
+//        "%1 Installed, %2 upgradeable, %3 available"
+//        m_backend->packageCount(QApt::Package::Installed);
+//        m_backend->packageCount(QApt::Package::Upgradeable);
+//        m_backend->packageCount();
+
+//        "%1 To install, %2 to upgrade, %3 to remove"
+//        m_backend->packageCount(QApt::Package::ToInstall);
+//        m_backend->packageCount(QApt::Package::ToUpgrade);
+//        m_backend->packageCount(QApt::Package::ToRemove);
+    }
+
+    // 判断是否已经安装
+    if (m_package->isInstalled()) {
+        this->isInstalled = true;
+    }
+
+    // 判断是否可升级
+    if (m_package->state() & QApt::Package::Upgradeable) {
+        this->upgradeable = true;
+    }
+}

@@ -21,6 +21,8 @@
 MainWindow::MainWindow(QString arg,QWidget *parent)
     : QMainWindow(parent)
 {
+    AppMessage appMessage = new AppMessage("kylin-ipmsg");
+
     qDBusRegisterMetaType<CustomData>();
     // 界面获取焦点
     setFocus();

@@ -1,0 +1,10 @@
+#!/bin/bash
+
+export QT_SELECT=qt5
+rm .qmake.stash
+rm -rf build
+mkdir build
+cd build
+qmake ..
+make -j8
+./$1

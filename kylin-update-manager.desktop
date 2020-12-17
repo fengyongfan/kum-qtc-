@@ -1,0 +1,7 @@
+[Desktop Entry]
+Name=kylin-update-manager
+Name[zh_CN]=更新管理器
+Exec=/usr/bin/kylin-update-manager %u
+Icon=kylin-update-manager
+Type=Application
+Categories=Utility;Music;

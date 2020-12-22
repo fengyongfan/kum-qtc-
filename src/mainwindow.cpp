@@ -21,7 +21,8 @@
 MainWindow::MainWindow(QString arg,QWidget *parent)
     : QMainWindow(parent)
 {
-    AppMessage appMessage = new AppMessage("kylin-ipmsg");
+    AppMessage *appMessage = new AppMessage("kylin-ipmsg");
+//    appMessage->getAppChangelog();
 
     qDBusRegisterMetaType<CustomData>();
     // 界面获取焦点
@@ -155,7 +156,7 @@ void MainWindow::keyPressEvent(QKeyEvent *event)
 
 void MainWindow::getDBusService()
 {
-    qDebug() << "MainWindow" << UpdateDbus::updateMutual->checkIsInstalled("kylin-ipmsg");
+//    qDebug() << "MainWindow" << UpdateDbus::updateMutual->checkIsInstalled("kylin-ipmsg");
     my_time->stop();
 }
 

@@ -26,6 +26,7 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
+
     MainWindow w(argv[1]);  //传入参数 判断是定时器拉起或手动打开
     w.show();
 

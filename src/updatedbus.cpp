@@ -1,4 +1,5 @@
 #include "updatedbus.h"
+#include "ukscconn.h"
 
 UpdateDbus* UpdateDbus::updateMutual = new UpdateDbus();
 using namespace std;
@@ -31,31 +32,33 @@ UpdateDbus::UpdateDbus()
 
 //    connect(interface, SIGNAL(kum_apt_signal(QString, QVariantMap)), this, SLOT(getAptSignal(QString, QVariantMap)));
 
+
+//    qDebug() << "ukscConn->getInfoByName" << UKSCConn::ukscConn->getInfoByName("kylin-ipmsg");
     init_cache();
 
-    installAndUpgrade("kylin-ipmsg");
+//    installAndUpgrade("kylin-ipmsg");
     // 初始化interface接口
-    getDesktopOrServer();
-    getSourceListFromSinfo();
-    getInameAndCnameList();
+//    getDesktopOrServer();
+//    getSourceListFromSinfo();
+//    getInameAndCnameList();
 
-    instalOneApp("kylin-ipmsg");
+//    instalOneApp("kylin-ipmsg");
 
-    getUpdateAppInfo("kylin-ipmsg");
-    bool ischecked,test;
+//    getUpdateAppInfo("kylin-ipmsg");
+//    bool ischecked,test;
 
-    ischecked = checkIsInstalled("kylin-ipmsg");
+//    ischecked = checkIsInstalled("kylin-ipmsg");
 //    qDebug() << "checkIsInstalled" << ischecked;
 
 //    init_cache();
-    getDependsPkgs("kylin-ipmsg");
+//    getDependsPkgs("kylin-ipmsg");
 
 
 /*    QString testAppName = "kylin-ipmsg";
     qDebug() << "测试接口类型:" << getDependsPkgs(testAppName).value() */
 
 
-    test = checkLoongson3A4000();
+//    test = checkLoongson3A4000();
 //    qDebug() << "是否安装:" << ischecked;
 //    qDebug() << "是否龙芯:" << test;
 
@@ -489,6 +492,7 @@ QStringList UpdateDbus::getDependsPkgs(QString appName)
     }
     else{
         qDebug() << QString("Call failed");
+        return QStringList("");
     }
 }
 
@@ -936,11 +940,11 @@ AppMessage::AppMessage(QString appName)
         this->name    = m_package->name();
         this->section = m_package->section();
         this->origin  = m_package->origin();
-        this->installedSize = m_package->availableInstalledSize();
+        this->installedSize = QString::number(m_package->availableInstalledSize());
         this->maintainer = m_package->maintainer();
         this->source  = m_package->sourcePackage();
         this->version = m_package->version();
-        this->packageSize = m_package->downloadSize();
+        this->packageSize = QString::number(m_package->downloadSize());
         this->shortDescription = m_package->shortDescription();
         this->longDescription  = m_package->longDescription();
 
@@ -971,6 +975,8 @@ AppMessage::AppMessage(QString appName)
 //        m_backend->packageCount(QApt::Package::ToInstall);
 //        m_backend->packageCount(QApt::Package::ToUpgrade);
 //        m_backend->packageCount(QApt::Package::ToRemove);
+
+//        connect(m_backend, SIGNAL(packageChanged()), this, SLOT(updateStatusBar()));
     }
 
     // 判断是否已经安装
@@ -982,4 +988,58 @@ AppMessage::AppMessage(QString appName)
     if (m_package->state() & QApt::Package::Upgradeable) {
         this->upgradeable = true;
     }
+}
+
+// 处理获取changelog
+void AppMessage::getAppChangelog()
+{
+    QString keyword = "";
+    QString fileName = "";
+    QStringList fileNameList;
+
+    fileNameList.append("/usr/share/doc/" + this->name + "/changelog.gz");
+    fileNameList.append("/usr/share/doc/" + this->name + "/changelog.Debian.gz");
+
+    // 判断changelog文件路径
+    QFile file(fileNameList[0]);
+    if (file.exists())
+    {
+        fileName = fileNameList[0];
+    }
+    else
+    {
+        QFile file2(fileNameList[1]);
+        if (file2.exists())
+        {
+            fileName = fileNameList[1];
+        }
+    }
+
+    // 此方法下载changelog失败
+    QProcess os(0);
+    QStringList args;
+
+    args.append(this->name);
+    args.append(" > /dev/null 2>&1");
+
+    os.start("apt-get changelog", args);
+    os.waitForFinished(); //等待完成
+
+    // 解析本地changelog文件
+    args.clear();
+    args.append(fileName);
+
+    os.start("zless", args);
+    os.waitForFinished(); //等待完成
+
+    QString result = QString::fromLocal8Bit(os.readAllStandardOutput());
+//    qDebug() << result;
+    getChangelog(result);
+
+}
+
+// 解析本地changelog
+QString AppMessage::getChangelog(QString result)
+{
+    QStringList changelogList = result.split("\n");
 }

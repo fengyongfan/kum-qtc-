@@ -25,6 +25,7 @@
 #include <QProcess>
 #include <QTime>
 #include <QTimer>
+#include <QString>
 
 
 #include <QCoreApplication>
@@ -56,8 +57,16 @@ public:
     QString screenshotUrl;
     QString supportedUntil;
 
+    // 是否已安装
     bool isInstalled;
+    // 是否可更新
     bool upgradeable;
+
+    // 处理获取changelog
+    void getAppChangelog();
+
+    // 解析本地changelog
+    QString getChangelog(QString result);
 
 private:
     QApt::Backend *m_backend;

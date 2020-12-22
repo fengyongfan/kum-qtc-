@@ -1,5 +1,5 @@
 
-QT += core gui widgets network dbus QApt
+QT += core gui widgets network dbus QApt sql
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -63,7 +63,8 @@ SOURCES +=                  \
     src/updatelog.cpp \
     src/widgetstyle.cpp \
     src/tabwidget.cpp \
-    src/pyconnect.cpp
+    src/pyconnect.cpp \
+    src/ukscconn.cpp
 
 HEADERS +=                  \
     src/appupdate.h \
@@ -76,7 +77,8 @@ HEADERS +=                  \
     src/widgetstyle.h \
     src/tabwidget.h \
     src/pyconnect.h \
-    src/metatypes.h
+    src/metatypes.h \
+    src/ukscconn.h
 
 # 图片资源路径
 RESOURCES += \

@@ -48,7 +48,7 @@ void TabWid::allComponents()
     tab1VLayout->addWidget(systemWidget,0,Qt::AlignTop);
     tab1VLayout->addWidget(appUpdateListWidget);
 
-    getAppUpdateMsg();
+//    getAppUpdateMsg();
 //    updateTab->setLayout(tab1VLayout);
 
 

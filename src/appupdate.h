@@ -9,6 +9,8 @@
 
 #include "updatelog.h"
 
+class UpdateLog;
+
 class AppUpdateWid : public QWidget
 {
     Q_OBJECT
@@ -29,6 +31,8 @@ public:
     QVBoxLayout *largeVLayout;
     QWidget *largeWidget;
     QVBoxLayout *mainVLayout;
+
+    UpdateLog *updatelog1;
 
 
     //展开界面
